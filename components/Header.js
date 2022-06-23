@@ -65,7 +65,7 @@ function Header() {
         layout="fixed"
         />
 
-        <p className='font-semibold whitespace-nowrap'> Users Name</p>
+        <p className='font-semibold whitespace-nowrap'> {session.user.name}</p>
         <ViewGridIcon className='icon'/>
         <ChatIcon className='icon'/>
         <BellIcon className='icon'/>
