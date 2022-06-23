@@ -4,8 +4,6 @@ import { getSession } from "next-auth/react"
 import Login from '../components/Login'
 
 export default function Home({session}) {
-  console.log('session', session)
-
   if(!session) {
     return <Login/>
   }

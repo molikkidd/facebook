@@ -5,6 +5,7 @@ module.exports = {
       "links.papareact.com",
       "plaform-lookaside.fbsbx.com",
       "firebasestorage.googleapis.com",
+      "platform-lookaside.fbsbx.com",
     ],
   }
 }
