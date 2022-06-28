@@ -1,9 +1,6 @@
-import firebase from "/firebase";
-import "firebase/storage"
-import { getStorage } from "firebase/storage";
-import { initializeApp } from 'firebase/app';
-
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage"
+import 'firebase/compat/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDMzTF-91xxE1js-11FYsd8TT-cssGljuk",
@@ -14,10 +11,12 @@ const firebaseConfig = {
     appId: "1:745475378247:web:780f46e41966e88fa17562"
   };
 
-  const app = initializeApp(firebaseConfig);
-// connect to firestore
-  const db = getFirestore(app);
 
-  const storage = getStorage(app);
+  const app = !firebase.apps.length 
+            ? firebase.initializeApp(firebaseConfig) 
+            : firebase.app();
+// connect to firestore
+  const db = app.firestore();
+  const storage = firebase.storage();
 
   export { db, storage};

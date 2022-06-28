@@ -3,13 +3,14 @@ import React, { useRef } from 'react'
 import {useSession} from 'next-auth/react'
 import {VideoCameraIcon, CameraIcon} from '@heroicons/react/solid'
 import {EmojiHappyIcon} from '@heroicons/react/outline'
-import { db } from '../firebase'
+import { db, storage } from '../firebase'
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-
+import { Timestamp } from 'firebase/firestore'
 function InputBox() {
 
     const {data: session, status} = useSession();
     const inputRef = useRef(null);
+    console.log('app', storage, 'db', db)
 
     const sendPost = (e) => {
         e.preventDefault();
@@ -20,7 +21,7 @@ function InputBox() {
             name: session.user.name,
             email: session.user.email,
             image: session.user.image,
-            timestamp: firebase.firestore.fieldValue.serverTimestamp()
+            timestamp: Timestamp.now()
         })
        inputRef.current.value = ''; 
     }
