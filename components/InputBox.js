@@ -22,7 +22,27 @@ function InputBox() {
             email: session.user.email,
             image: session.user.image,
             timestamp: Timestamp.now()
-        })
+        }).then(doc => {
+            if(imageToPost) {
+                // store image string url in firebase (base64 encoded image)
+                const uploadTask = storage.ref(`posts/${doc.id}`).putString(imageToPost, 'data_url');
+                removeImage();
+                uploadTask.on(
+                    'state_change', 
+                     null,
+                     (error) => console.error(error),
+                     () => {
+                        // when upload completes
+                        storage.ref(`posts`).child(doc.id).getDownloadURL().then(url => {
+                            // go to the doc that was just posted and set that to our storage
+                            db.collection('posts').doc(doc.id).set({
+                                postImage: url
+                            }, {merge: true})
+                        })
+                     }
+                );
+            }
+        });
        inputRef.current.value = ''; 
     }
 
@@ -66,12 +86,16 @@ function InputBox() {
             </form>
             {/* ADD IMAGE PREVIEW TO POST */}
             {imageToPost && (
-                <div className=''>
+                <div onClick={removeImage}
+                className="flex flex-col filter hover:brightness-110 
+                transition duration-150 transform hover:scale-105 cursor-pointer"
+                >
                     <img 
                     className='h-10 object-contain'
                     src={imageToPost} 
                     alt="postedImage" 
                     />
+                    <p className='text-xs text-red-500 text-center'>Remove</p>
                 </div>
             )}
         </div>
