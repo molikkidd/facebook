@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React from 'react'
 
 function Post({name, message, email, image, postImage, timestamp}) {
@@ -5,7 +6,7 @@ function Post({name, message, email, image, postImage, timestamp}) {
 
   return (
     <div className='flex flex-col'>
-        <div>
+        <div className='p-5 bg-white mt-5 rounded-t-2xl shadow-lg'>
             <div className='flex items-center space-x-2'>
                 <img 
                 className='rounded-full'
@@ -23,7 +24,18 @@ function Post({name, message, email, image, postImage, timestamp}) {
                    </p>
                 </div>
             </div>
+            <p className='pt-4'>{message}</p>
         </div>
+        {postImage && (
+            <div className='relative h-56 md:h-96 bg-white'>
+                <Image
+                src={postImage}
+                objectFit="cover"
+                layout='fill'
+                />
+            </div>
+        )
+        }
     </div>
   )
 }
