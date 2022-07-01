@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import {useSession} from 'next-auth/react'
 import {VideoCameraIcon, CameraIcon} from '@heroicons/react/solid'
 import {EmojiHappyIcon} from '@heroicons/react/outline'
@@ -10,8 +10,8 @@ function InputBox() {
 
     const {data: session, status} = useSession();
     const inputRef = useRef(null);
-    console.log('app', storage, 'db', db)
-
+    const filePickerRef = useRef(null);
+    const [imageToPost, setImageToPost] = useState(null);
     const sendPost = (e) => {
         e.preventDefault();
         if(!inputRef.current.value) return;
@@ -26,6 +26,21 @@ function InputBox() {
        inputRef.current.value = ''; 
     }
 
+    const addImageToPost = (e) => {
+        // initialize file reader
+        const reader = new FileReader();
+        // if a file exist than read the file
+        if(e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+        }
+        // set read image to post
+        reader.onload = (readerEvent) => {
+            setImageToPost(readerEvent.target.result)
+        }
+    } 
+    const removeImage = () => {
+        setImageToPost(null)
+    }
   return (
     <div className='bg-white p-2 rounded-2xl shadow-md text-gray-500 font-medium mt-6'>
         <div className='flex space-x-4 p-4 items-center'>
@@ -49,6 +64,16 @@ function InputBox() {
                     Submit
                 </button>
             </form>
+            {/* ADD IMAGE PREVIEW TO POST */}
+            {imageToPost && (
+                <div className=''>
+                    <img 
+                    className='h-10 object-contain'
+                    src={imageToPost} 
+                    alt="postedImage" 
+                    />
+                </div>
+            )}
         </div>
         <div className='flex justify-evenly p-3 border-t'>
             {/* LIVE VIDEO */}
@@ -57,9 +82,18 @@ function InputBox() {
             <p className='text-xs sm:text-sm xl:text-base'>Live Video</p>
             </div>
             {/* PHOTOS */}
-            <div className='inputIcon'>
+            <div 
+            className='inputIcon'
+            onClick={() => filePickerRef.current.click()}
+            >
             <CameraIcon className='h-7 text-green-500'/>
             <p className='text-xs sm:text-sm xl:text-base'>Photo/Video</p>
+            <input 
+            type="file" 
+            hidden 
+            onChange={addImageToPost}
+            ref={filePickerRef}
+             />
 
             </div>
             {/*  ACTIVITIES */}
